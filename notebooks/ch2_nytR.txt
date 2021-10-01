@@ -1,0 +1,444 @@
+
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[R.app GUI 1.77 (7985) x86_64-apple-darwin17.0]
+
+> ls
+function (name, pos = -1L, envir = as.environment(pos), all.names = FALSE, 
+    pattern, sorted = TRUE) 
+{
+    if (!missing(name)) {
+        pos <- tryCatch(name, error = function(e) e)
+        if (inherits(pos, "error")) {
+            name <- substitute(name)
+            if (!is.character(name)) 
+                name <- deparse(name)
+            warning(gettextf("%s converted to character string", 
+                sQuote(name)), domain = NA)
+            pos <- name
+        }
+    }
+    all.names <- .Internal(ls(envir, all.names, sorted))
+    if (!missing(pattern)) {
+        if ((ll <- length(grep("[", pattern, fixed = TRUE))) && 
+            ll != length(grep("]", pattern, fixed = TRUE))) {
+            if (pattern == "[") {
+                pattern <- "\\["
+                warning("replaced regular expression pattern '[' by  '\\\\['")
+            }
+            else if (length(grep("[^\\\\]\\[<-", pattern))) {
+                pattern <- sub("\\[<-", "\\\\\\[<-", pattern)
+                warning("replaced '[<-' by '\\\\[<-' in regular expression pattern")
+            }
+        }
+        grep(pattern, all.names, value = TRUE)
+    }
+    else all.names
+}
+<bytecode: 0x7f9e4ca150b0>
+<environment: namespace:base>
+> data1 <- read.csv(file = '/Users/Diogenes/Documents/doing_data_science/dds_datasets/dds_ch2_nyt/nyt1.csv')
+> head(data1)
+  Age Gender Impressions Clicks Signed_In
+1  36      0           3      0         1
+2  73      1           3      0         1
+3  30      0           3      0         1
+4  49      1           3      0         1
+5  47      1          11      0         1
+6  47      0          11      1         1
+> data1$agecat <- cut(data1$Age, c(-inf,0, 18, 24, 34, 44, 54, 64, inf))
+Error in cut.default(data1$Age, c(-inf, 0, 18, 24, 34, 44, 54, 64, inf)) : 
+  object 'inf' not found
+> data1$agecat <- cut(data1$Age, c(-Inf,0, 18, 24, 34, 44, 54, 64, Inf))
+> summary(data1)
+      Age             Gender       Impressions         Clicks       
+ Min.   :  0.00   Min.   :0.000   Min.   : 0.000   Min.   :0.00000  
+ 1st Qu.:  0.00   1st Qu.:0.000   1st Qu.: 3.000   1st Qu.:0.00000  
+ Median : 31.00   Median :0.000   Median : 5.000   Median :0.00000  
+ Mean   : 29.48   Mean   :0.367   Mean   : 5.007   Mean   :0.09259  
+ 3rd Qu.: 48.00   3rd Qu.:1.000   3rd Qu.: 6.000   3rd Qu.:0.00000  
+ Max.   :108.00   Max.   :1.000   Max.   :20.000   Max.   :4.00000  
+                                                                    
+   Signed_In           agecat      
+ Min.   :0.0000   (-Inf,0]:137106  
+ 1st Qu.:0.0000   (34,44] : 70860  
+ Median :1.0000   (44,54] : 64288  
+ Mean   :0.7009   (24,34] : 58174  
+ 3rd Qu.:1.0000   (54,64] : 44738  
+ Max.   :1.0000   (18,24] : 35270  
+                  (Other) : 48005  
+> install.packages("doBy")
+--- Please select a CRAN mirror for use in this session ---
+also installing the dependencies ‘colorspace’, ‘stringi’, ‘cpp11’, ‘cli’, ‘crayon’, ‘utf8’, ‘farver’, ‘labeling’, ‘munsell’, ‘RColorBrewer’, ‘viridisLite’, ‘minqa’, ‘nloptr’, ‘Rcpp’, ‘RcppEigen’, ‘evaluate’, ‘highr’, ‘yaml’, ‘xfun’, ‘backports’, ‘ellipsis’, ‘generics’, ‘glue’, ‘purrr’, ‘rlang’, ‘stringr’, ‘tidyr’, ‘lifecycle’, ‘R6’, ‘tidyselect’, ‘vctrs’, ‘pillar’, ‘digest’, ‘gtable’, ‘isoband’, ‘scales’, ‘withr’, ‘lme4’, ‘numDeriv’, ‘knitr’, ‘fansi’, ‘pkgconfig’, ‘broom’, ‘curry’, ‘Deriv’, ‘dplyr’, ‘ggplot2’, ‘magrittr’, ‘microbenchmark’, ‘pbkrtest’, ‘tibble’
+
+
+  There are binary versions available but the source versions are
+  later:
+       binary source needs_compilation
+knitr    1.35   1.36             FALSE
+tibble  3.1.4  3.1.5              TRUE
+
+Do you want to install from sources the package which needs compilation? (Yes/no/cancel) Yes
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/colorspace_2.0-2.tgz'
+Content type 'application/octet-stream' length 2618801 bytes (2.5 MB)
+==================================================
+downloaded 2.5 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/stringi_1.7.4.tgz'
+Content type 'application/octet-stream' length 14635544 bytes (14.0 MB)
+==================================================
+downloaded 14.0 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/cpp11_0.4.0.tgz'
+Content type 'application/octet-stream' length 304259 bytes (297 KB)
+==================================================
+downloaded 297 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/cli_3.0.1.tgz'
+Content type 'application/octet-stream' length 715922 bytes (699 KB)
+==================================================
+downloaded 699 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/crayon_1.4.1.tgz'
+Content type 'application/octet-stream' length 139748 bytes (136 KB)
+==================================================
+downloaded 136 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/utf8_1.2.2.tgz'
+Content type 'application/octet-stream' length 196736 bytes (192 KB)
+==================================================
+downloaded 192 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/farver_2.1.0.tgz'
+Content type 'application/octet-stream' length 1949853 bytes (1.9 MB)
+==================================================
+downloaded 1.9 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/labeling_0.4.2.tgz'
+Content type 'application/octet-stream' length 60282 bytes (58 KB)
+==================================================
+downloaded 58 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/munsell_0.5.0.tgz'
+Content type 'application/octet-stream' length 241442 bytes (235 KB)
+==================================================
+downloaded 235 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/RColorBrewer_1.1-2.tgz'
+Content type 'application/octet-stream' length 52954 bytes (51 KB)
+==================================================
+downloaded 51 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/viridisLite_0.4.0.tgz'
+Content type 'application/octet-stream' length 1296462 bytes (1.2 MB)
+==================================================
+downloaded 1.2 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/minqa_1.2.4.tgz'
+Content type 'application/octet-stream' length 341842 bytes (333 KB)
+==================================================
+downloaded 333 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/nloptr_1.2.2.2.tgz'
+Content type 'application/octet-stream' length 945288 bytes (923 KB)
+==================================================
+downloaded 923 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/Rcpp_1.0.7.tgz'
+Content type 'application/octet-stream' length 3207179 bytes (3.1 MB)
+==================================================
+downloaded 3.1 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/RcppEigen_0.3.3.9.1.tgz'
+Content type 'application/octet-stream' length 4851252 bytes (4.6 MB)
+==================================================
+downloaded 4.6 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/evaluate_0.14.tgz'
+Content type 'application/octet-stream' length 74151 bytes (72 KB)
+==================================================
+downloaded 72 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/highr_0.9.tgz'
+Content type 'application/octet-stream' length 39056 bytes (38 KB)
+==================================================
+downloaded 38 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/yaml_2.2.1.tgz'
+Content type 'application/octet-stream' length 203023 bytes (198 KB)
+==================================================
+downloaded 198 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/xfun_0.26.tgz'
+Content type 'application/octet-stream' length 343102 bytes (335 KB)
+==================================================
+downloaded 335 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/backports_1.2.1.tgz'
+Content type 'application/octet-stream' length 86160 bytes (84 KB)
+==================================================
+downloaded 84 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/ellipsis_0.3.2.tgz'
+Content type 'application/octet-stream' length 36499 bytes (35 KB)
+==================================================
+downloaded 35 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/generics_0.1.0.tgz'
+Content type 'application/octet-stream' length 68647 bytes (67 KB)
+==================================================
+downloaded 67 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/glue_1.4.2.tgz'
+Content type 'application/octet-stream' length 139069 bytes (135 KB)
+==================================================
+downloaded 135 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/purrr_0.3.4.tgz'
+Content type 'application/octet-stream' length 417295 bytes (407 KB)
+==================================================
+downloaded 407 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/rlang_0.4.11.tgz'
+Content type 'application/octet-stream' length 1313203 bytes (1.3 MB)
+==================================================
+downloaded 1.3 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/stringr_1.4.0.tgz'
+Content type 'application/octet-stream' length 210036 bytes (205 KB)
+==================================================
+downloaded 205 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/tidyr_1.1.4.tgz'
+Content type 'application/octet-stream' length 964401 bytes (941 KB)
+==================================================
+downloaded 941 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/lifecycle_1.0.1.tgz'
+Content type 'application/octet-stream' length 105712 bytes (103 KB)
+==================================================
+downloaded 103 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/R6_2.5.1.tgz'
+Content type 'application/octet-stream' length 82529 bytes (80 KB)
+==================================================
+downloaded 80 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/tidyselect_1.1.1.tgz'
+Content type 'application/octet-stream' length 198270 bytes (193 KB)
+==================================================
+downloaded 193 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/vctrs_0.3.8.tgz'
+Content type 'application/octet-stream' length 1413008 bytes (1.3 MB)
+==================================================
+downloaded 1.3 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/pillar_1.6.3.tgz'
+Content type 'application/octet-stream' length 1057570 bytes (1.0 MB)
+==================================================
+downloaded 1.0 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/digest_0.6.28.tgz'
+Content type 'application/octet-stream' length 301165 bytes (294 KB)
+==================================================
+downloaded 294 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/gtable_0.3.0.tgz'
+Content type 'application/octet-stream' length 431504 bytes (421 KB)
+==================================================
+downloaded 421 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/isoband_0.2.5.tgz'
+Content type 'application/octet-stream' length 3379737 bytes (3.2 MB)
+==================================================
+downloaded 3.2 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/scales_1.1.1.tgz'
+Content type 'application/octet-stream' length 550673 bytes (537 KB)
+==================================================
+downloaded 537 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/withr_2.4.2.tgz'
+Content type 'application/octet-stream' length 209270 bytes (204 KB)
+==================================================
+downloaded 204 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/lme4_1.1-27.1.tgz'
+Content type 'application/octet-stream' length 7335471 bytes (7.0 MB)
+==================================================
+downloaded 7.0 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/numDeriv_2016.8-1.1.tgz'
+Content type 'application/octet-stream' length 113185 bytes (110 KB)
+==================================================
+downloaded 110 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/fansi_0.5.0.tgz'
+Content type 'application/octet-stream' length 237583 bytes (232 KB)
+==================================================
+downloaded 232 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/pkgconfig_2.0.3.tgz'
+Content type 'application/octet-stream' length 17777 bytes (17 KB)
+==================================================
+downloaded 17 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/broom_0.7.9.tgz'
+Content type 'application/octet-stream' length 1784752 bytes (1.7 MB)
+==================================================
+downloaded 1.7 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/curry_0.1.1.tgz'
+Content type 'application/octet-stream' length 21682 bytes (21 KB)
+==================================================
+downloaded 21 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/Deriv_4.1.3.tgz'
+Content type 'application/octet-stream' length 146805 bytes (143 KB)
+==================================================
+downloaded 143 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/dplyr_1.0.7.tgz'
+Content type 'application/octet-stream' length 1263555 bytes (1.2 MB)
+==================================================
+downloaded 1.2 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/ggplot2_3.3.5.tgz'
+Content type 'application/octet-stream' length 4125542 bytes (3.9 MB)
+==================================================
+downloaded 3.9 MB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/magrittr_2.0.1.tgz'
+Content type 'application/octet-stream' length 224637 bytes (219 KB)
+==================================================
+downloaded 219 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/microbenchmark_1.4-7.tgz'
+Content type 'application/octet-stream' length 59882 bytes (58 KB)
+==================================================
+downloaded 58 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/pbkrtest_0.5.1.tgz'
+Content type 'application/octet-stream' length 352626 bytes (344 KB)
+==================================================
+downloaded 344 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/doBy_4.6.11.tgz'
+Content type 'application/octet-stream' length 4510617 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+
+The downloaded binary packages are in
+	/var/folders/bq/4bg940f96gl39rfsf7jr9b9c0000gn/T//RtmpkWtmZl/downloaded_packages
+installing the source packages ‘knitr’, ‘tibble’
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/src/contrib/knitr_1.36.tar.gz'
+Content type 'application/octet-stream' length 896116 bytes (875 KB)
+==================================================
+downloaded 875 KB
+
+trying URL 'https://repo.miserver.it.umich.edu/cran/src/contrib/tibble_3.1.5.tar.gz'
+Content type 'application/octet-stream' length 739036 bytes (721 KB)
+==================================================
+downloaded 721 KB
+
+* installing *source* package ‘knitr’ ...
+** package ‘knitr’ successfully unpacked and MD5 sums checked
+** using staged installation
+** R
+** demo
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (knitr)
+* installing *source* package ‘tibble’ ...
+** package ‘tibble’ successfully unpacked and MD5 sums checked
+** using staged installation
+** libs
+clang -mmacosx-version-min=10.13 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/usr/local/include   -fPIC  -Wall -g -O2  -c attributes.c -o attributes.o
+clang -mmacosx-version-min=10.13 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/usr/local/include   -fPIC  -Wall -g -O2  -c coerce.c -o coerce.o
+clang -mmacosx-version-min=10.13 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/usr/local/include   -fPIC  -Wall -g -O2  -c init.c -o init.o
+clang -mmacosx-version-min=10.13 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/usr/local/include   -fPIC  -Wall -g -O2  -c matrixToDataFrame.c -o matrixToDataFrame.o
+clang -mmacosx-version-min=10.13 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o tibble.so attributes.o coerce.o init.o matrixToDataFrame.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation
+installing to /Library/Frameworks/R.framework/Versions/4.1/Resources/library/00LOCK-tibble/00new/tibble/libs
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+*** copying figures
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (tibble)
+
+The downloaded source packages are in
+	‘/private/var/folders/bq/4bg940f96gl39rfsf7jr9b9c0000gn/T/RtmpkWtmZl/downloaded_packages’
+> library("doBy")
+> siterange <- function(x){c(length(x), min(x), mean(x), max(x))}
+> summaryBy(Age~agecat, data= data1, FUN= siterange)
+     agecat Age.FUN1 Age.FUN2 Age.FUN3 Age.FUN4
+1  (-Inf,0]   137106        0  0.00000        0
+2    (0,18]    19252        7 16.03350       18
+3   (18,24]    35270       19 21.26904       24
+4   (24,34]    58174       25 29.50335       34
+5   (34,44]    70860       35 39.49468       44
+6   (44,54]    64288       45 49.49258       54
+7   (54,64]    44738       55 59.49819       64
+8 (64, Inf]    28753       65 72.98870      108
+> summaryBy(Gender+Signed_In+Impressions+Clicks~agecat, data =data1)
+     agecat Gender.mean Signed_In.mean Impressions.mean Clicks.mean
+1  (-Inf,0]   0.0000000              0         4.999657  0.14207985
+2    (0,18]   0.6421151              1         4.998961  0.13105132
+3   (18,24]   0.5338531              1         5.006635  0.04845478
+4   (24,34]   0.5321621              1         4.993829  0.05048647
+5   (34,44]   0.5316963              1         5.021507  0.05167937
+6   (44,54]   0.5289790              1         5.010406  0.05027377
+7   (54,64]   0.5361885              1         5.022308  0.10183736
+8 (64, Inf]   0.3632664              1         5.012347  0.15128856
+> install.packages("ggplot2")
+trying URL 'https://repo.miserver.it.umich.edu/cran/bin/macosx/contrib/4.1/ggplot2_3.3.5.tgz'
+Content type 'application/octet-stream' length 4125542 bytes (3.9 MB)
+==================================================
+downloaded 3.9 MB
+
+
+The downloaded binary packages are in
+	/var/folders/bq/4bg940f96gl39rfsf7jr9b9c0000gn/T//RtmpkWtmZl/downloaded_packages
+> library(ggplot2)
+> ggplot(data1, aes(x=Impressions, fill=agecat)) +geom_histogram(binwidth=1)
+> ggplot(data1, aes(x=agecat, y=Impressions, fill=agecat)) +geom_boxplot()
+> data1$hasImps <- cut(data1$Impressions, c(-Inf, 0, Inf))
+> summaryBy(Clicks~hasImps, data =data1, FUN=siterange)
+   hasImps Clicks.FUN1 Clicks.FUN2 Clicks.FUN3 Clicks.FUN4
+1 (-Inf,0]        3066           0  0.00000000           0
+2 (0, Inf]      455375           0  0.09321768           4
+> ggplot(subset(data1, Impressions>0), aes(x=Clicks/Impressions, colour=agecat)) + geom_density()
+> 
